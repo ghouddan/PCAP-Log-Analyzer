@@ -1,0 +1,236 @@
+[
+    {
+        "src_ip": "192.168.200.135",
+        "dst_ip": "192.168.200.21",
+        "protocol": "TCP",
+        "dest_port": "2000",
+        "length": "66",
+        "timestamp": "2020-07-22T16:22:25.360596",
+        "info": null
+    },
+    {
+        "src_ip": "192.168.200.21",
+        "dst_ip": "192.168.200.135",
+        "protocol": "TCP",
+        "dest_port": "6711",
+        "length": "66",
+        "timestamp": "2020-07-22T16:22:25.363991",
+        "info": null
+    },
+    {
+        "src_ip": "192.168.200.135",
+        "dst_ip": "192.168.200.21",
+        "protocol": "TCP",
+        "dest_port": "2000",
+        "length": "54",
+        "timestamp": "2020-07-22T16:22:25.364075",
+        "info": null
+    },
+    {
+        "src_ip": "192.168.200.135",
+        "dst_ip": "192.168.200.21",
+        "protocol": "TCP",
+        "dest_port": "2000",
+        "length": "60",
+        "timestamp": "2020-07-22T16:22:25.364225",
+        "info": null
+    },
+    {
+        "src_ip": "192.168.200.21",
+        "dst_ip": "192.168.200.135",
+        "protocol": "TCP",
+        "dest_port": "6711",
+        "length": "60",
+        "timestamp": "2020-07-22T16:22:25.368751",
+        "info": null
+    },
+    {
+        "src_ip": "192.168.200.21",
+        "dst_ip": "192.168.200.135",
+        "protocol": "TCP",
+        "dest_port": "6711",
+        "length": "60",
+        "timestamp": "2020-07-22T16:22:38.626498",
+        "info": null
+    },
+    {
+        "src_ip": "192.168.200.135",
+        "dst_ip": "192.168.200.21",
+        "protocol": "TCP",
+        "dest_port": "2000",
+        "length": "54",
+        "timestamp": "2020-07-22T16:22:38.626592",
+        "info": null
+    },
+    {
+        "src_ip": "192.168.200.135",
+        "dst_ip": "192.168.200.21",
+        "protocol": "TCP",
+        "dest_port": "2000",
+        "length": "54",
+        "timestamp": "2020-07-22T16:22:38.626700",
+        "info": null
+    },
+    {
+        "src_ip": "192.168.200.21",
+        "dst_ip": "192.168.200.135",
+        "protocol": "TCP",
+        "dest_port": "6711",
+        "length": "60",
+        "timestamp": "2020-07-22T16:22:38.629675",
+        "info": null
+    },
+    {
+        "src_ip": "192.168.200.135",
+        "dst_ip": "192.168.200.21",
+        "protocol": "TCP",
+        "dest_port": "2000",
+        "length": "66",
+        "timestamp": "2020-07-22T16:23:03.937420",
+        "info": null
+    },
+    {
+        "src_ip": "192.168.200.21",
+        "dst_ip": "192.168.200.135",
+        "protocol": "TCP",
+        "dest_port": "6712",
+        "length": "62",
+        "timestamp": "2020-07-22T16:23:03.942168",
+        "info": null
+    },
+    {
+        "src_ip": "192.168.200.135",
+        "dst_ip": "192.168.200.21",
+        "protocol": "TCP",
+        "dest_port": "2000",
+        "length": "54",
+        "timestamp": "2020-07-22T16:23:03.942254",
+        "info": null
+    },
+    {
+        "src_ip": "192.168.200.135",
+        "dst_ip": "192.168.200.21",
+        "protocol": "TCP",
+        "dest_port": "2000",
+        "length": "60",
+        "timestamp": "2020-07-22T16:23:03.942402",
+        "info": null
+    },
+    {
+        "src_ip": "192.168.200.21",
+        "dst_ip": "192.168.200.135",
+        "protocol": "TCP",
+        "dest_port": "6712",
+        "length": "60",
+        "timestamp": "2020-07-22T16:23:03.945800",
+        "info": null
+    },
+    {
+        "src_ip": "192.168.200.21",
+        "dst_ip": "192.168.200.135",
+        "protocol": "TCP",
+        "dest_port": "6712",
+        "length": "60",
+        "timestamp": "2020-07-22T16:23:18.498452",
+        "info": null
+    },
+    {
+        "src_ip": "192.168.200.135",
+        "dst_ip": "192.168.200.21",
+        "protocol": "TCP",
+        "dest_port": "2000",
+        "length": "54",
+        "timestamp": "2020-07-22T16:23:18.498546",
+        "info": null
+    },
+    {
+        "src_ip": "192.168.200.135",
+        "dst_ip": "192.168.200.21",
+        "protocol": "TCP",
+        "dest_port": "2000",
+        "length": "54",
+        "timestamp": "2020-07-22T16:23:18.498647",
+        "info": null
+    },
+    {
+        "src_ip": "192.168.200.21",
+        "dst_ip": "192.168.200.135",
+        "protocol": "TCP",
+        "dest_port": "6712",
+        "length": "60",
+        "timestamp": "2020-07-22T16:23:18.501610",
+        "info": null
+    },
+    {
+        "src_ip": "192.168.200.21",
+        "dst_ip": "192.168.200.135",
+        "protocol": "TCP",
+        "dest_port": "6713",
+        "length": "66",
+        "timestamp": "2020-07-22T16:27:07.859997",
+        "info": null
+    },
+    {
+        "src_ip": "192.168.200.135",
+        "dst_ip": "192.168.200.21",
+        "protocol": "TCP",
+        "dest_port": "2000",
+        "length": "54",
+        "timestamp": "2020-07-22T16:27:07.860088",
+        "info": null
+    },
+    {
+        "src_ip": "192.168.200.135",
+        "dst_ip": "192.168.200.21",
+        "protocol": "TCP",
+        "dest_port": "2000",
+        "length": "60",
+        "timestamp": "2020-07-22T16:27:07.860204",
+        "info": null
+    },
+    {
+        "src_ip": "192.168.200.21",
+        "dst_ip": "192.168.200.135",
+        "protocol": "TCP",
+        "dest_port": "6713",
+        "length": "60",
+        "timestamp": "2020-07-22T16:27:07.864709",
+        "info": null
+    },
+    {
+        "src_ip": "192.168.200.21",
+        "dst_ip": "192.168.200.135",
+        "protocol": "TCP",
+        "dest_port": "6713",
+        "length": "60",
+        "timestamp": "2020-07-22T16:27:21.986514",
+        "info": null
+    },
+    {
+        "src_ip": "192.168.200.135",
+        "dst_ip": "192.168.200.21",
+        "protocol": "TCP",
+        "dest_port": "2000",
+        "length": "54",
+        "timestamp": "2020-07-22T16:27:21.986595",
+        "info": null
+    },
+    {
+        "src_ip": "192.168.200.135",
+        "dst_ip": "192.168.200.21",
+        "protocol": "TCP",
+        "dest_port": "2000",
+        "length": "54",
+        "timestamp": "2020-07-22T16:27:21.986733",
+        "info": null
+    },
+    {
+        "src_ip": "192.168.200.21",
+        "dst_ip": "192.168.200.135",
+        "protocol": "TCP",
+        "dest_port": "6713",
+        "length": "60",
+        "timestamp": "2020-07-22T16:27:21.989981",
+        "info": null
+    }
+]
