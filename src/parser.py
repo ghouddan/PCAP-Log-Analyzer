@@ -1,36 +1,48 @@
 from pyshark import FileCapture
+from datetime import datetime
 import json
 
-
-
 def parser(file_path):
-    """"
-    take a file path that point to a pcap file and parse it to extract the
-    information of the packets in the file.
-    Args:
-        file_path (str): The path to the pcap file to be parsed.
     """
-    # Create a FileCapture object to read the pcap file
-    capture = FileCapture(file_path)
+    Enhanced parser that preserves layer information and timestamps correctly.
+    """
+    capture = FileCapture(file_path, display_filter='ssh')
     pcap_parsed = []
-    for packet in capture:
-        packet_info= { 
-            "src_ip" : packet['ip'].src,
-            "dst_ip" :packet['ip'].dst,
-            "protocol" : packet.transport_layer if hasattr(packet, 'transport_layer') else None,
-            "dest_port" : packet['tcp'].dstport if 'tcp' in packet else None,
-            "length" :packet.length, 
-            "timestamp" : packet.sniff_time.isoformat(),
-            "info" : packet.info if hasattr(packet, 'info') else None
-        }
-        pcap_parsed.append(packet_info)
-    return pcap_parsed
     
+    for packet in capture:
+        try:
+            packet_info = {
+                "src_ip": packet.ip.src if hasattr(packet, 'ip') else None,
+                "dst_ip": packet.ip.dst if hasattr(packet, 'ip') else None,
+                "protocol": packet.transport_layer if hasattr(packet, 'transport_layer') else None,
+                "dest_port": int(packet.tcp.dstport) if hasattr(packet, 'tcp') and hasattr(packet.tcp, 'dstport') else None,
+                "length": packet.length,
+                "timestamp": packet.sniff_time,  # ✅ datetime object
+                "timestamp_str": packet.sniff_time.isoformat(),  # For display/logging
+
+                # Layer-specific fields
+                "ssh_message_code": packet.ssh.message_code if hasattr(packet, 'ssh') and hasattr(packet.ssh, 'message_code') else None,
+                "http_method": packet.http.request_method if hasattr(packet, 'http') and hasattr(packet.http, 'request_method') else None,
+                "http_response_code": packet.http.response_code if hasattr(packet, 'http') and hasattr(packet.http, 'response_code') else None,
+                "http_uri": packet.http.request_uri if hasattr(packet, 'http') and hasattr(packet.http, 'request_uri') else None,
+                "ftp_response_code": packet.ftp.response_code if hasattr(packet, 'ftp') and hasattr(packet.ftp, 'response_code') else None,
+                "layers": packet.layers
+            }
+            pcap_parsed.append(packet_info)
+
+        except Exception as e:
+            continue
+
+    capture.close()
+    return pcap_parsed
+
 
 
 
 if __name__ == "__main__" :
-    parsed_pcap = parser("/home/mo/Desktop/PCAP-log-analyzer/samples/200722_win_scale_examples_anon.pcapng")
-with open("result.json", 'w') as f :
+    parsed_pcap = parser("/home/mo/Downloads/second_capture.pcapng")
+    #print(parsed_pcap)  # Display first 5 packets for verification
+    print(parsed_pcap)
+    """with open("result.json", 'w') as f :
     json.dump(parsed_pcap, f, indent=4)
-    print("PCAP file parsed and saved to result.json")
+    #print("PCAP file parsed and saved to result.json")"""
