@@ -14,6 +14,8 @@ def detect_brute_force_with_timing(
         packets: List of parsed packet dictionaries.
         threshold: Max failed attempts allowed in time window.
         time_window: Time window in seconds.
+    Returns:
+        List of alerts for detected brute force attacks.
     """
     failed_attempts = defaultdict(list)
 
@@ -177,59 +179,108 @@ def detect_rapid_attempts(packets: List[Dict[str, Any]], max_interval: int = 10)
 
     return rapid_attempts
 
-def detect_port_scanning(packets: List[Dict[str, Any]], threshold: int = 10) -> List[Dict[str, Any]]:
+def detect_port_scanning(packets: List[Dict[str, Any]], threshold: int = 10, window_minutes: int = 1) -> List[Dict[str, Any]]:
     """
-    Detect port scanning based on the number of unique ports accessed by an IP.
-    """
-    port_scans = defaultdict(set)
-    horizontal_scans = defaultdict(set)
+    Detect vertical and horizontal port scanning within a specified time window.
+    Args:
+        packets: List of parsed packet dictionaries.
+        threshold: Minimum number of unique ports or destination IPs to trigger an alert.
+        window_minutes: Time window in minutes to consider for scanning detection.
+    Returns:
+        List of alerts for detected port scanning activities.
+        """
+
+    port_scans = defaultdict(set)          
+    horizontal_scans = defaultdict(set)    
+    timestamps = defaultdict(list)         
+
+    now = datetime.now()
+    window = timedelta(minutes=window_minutes)
 
     for packet in packets:
         try:
             src_ip = packet.get('src_ip')
+            dest_ip = packet.get('dst_ip')
             dest_port = int(packet.get('dest_port', 0))
-            dest_ip = packet.get('dest_ip')
+            ts_raw = packet.get('timestamp')
+            print(f"{src_ip} → {dest_ip}:{dest_port} @ {ts_raw}")
 
-            if src_ip and dest_port and dest_ip:
-                port_scans[src_ip].add(dest_port)
-                horizontal_scans[(src_ip, dest_port)].add(dest_ip)
 
-        except (KeyError, ValueError, TypeError):
+            if not (src_ip and dest_ip and dest_port and ts_raw):
+                continue
+
+            # Parse timestamp to datetime object
+            timestamp = datetime.fromisoformat(ts_raw) if isinstance(ts_raw, str) else ts_raw
+
+            # Apply time window filter
+            if now - timestamp > window:
+              continue
+
+            # Populate scan tracking structures
+            port_scans[src_ip].add(dest_port)
+            horizontal_scans[(src_ip, dest_port)].add(dest_ip)
+            timestamps[src_ip].append(timestamp)
+
+        except (ValueError, TypeError, KeyError):
             continue
 
-    alerts = []
+    alerts = {}
 
+    # Detect horizontal scans
     for (ip, port), dest_ips in horizontal_scans.items():
         if len(dest_ips) >= threshold:
-            alert = {
-                'ip': ip,
-                'port': port,
-                'unique_destinations': len(dest_ips),
-                'message': "Potential horizontal port scanning detected",
-                'severity': "HIGH" if len(dest_ips) > 50 else "MEDIUM"
-            }
-            alerts.append(alert)
+            if ip not in alerts:
+                alerts[ip] = {
+                    'ip': ip,
+                    'horizontal_ports': set(),
+                    'vertical_ports': set(),
+                    'message': "Potential port scanning detected",
+                    'severity': "HIGH" if len(dest_ips) > 50 else "MEDIUM",
+                    'type': [],
+                    'first_seen': min(timestamps[ip]).isoformat() if timestamps[ip] else None,
+                    'last_seen': max(timestamps[ip]).isoformat() if timestamps[ip] else None
+                }
+            alerts[ip]['horizontal_ports'].add(port)
+            if 'horizontal' not in alerts[ip]['type']:
+                alerts[ip]['type'].append('horizontal')
 
+    # Detect vertical scans
     for ip, ports in port_scans.items():
         if len(ports) >= threshold:
-            alert = {
-                'ip': ip,
-                'unique_ports': len(ports),
-                'message': "Potential port scanning detected",
-                'severity': "HIGH" if len(ports) > 50 else "MEDIUM"
-            }
-            alerts.append(alert)
+            if ip not in alerts:
+                alerts[ip] = {
+                    'ip': ip,
+                    'horizontal_ports': set(),
+                    'vertical_ports': set(),
+                    'message': "Potential port scanning detected",
+                    'severity': "HIGH" if len(ports) > 50 else "MEDIUM",
+                    'type': [],
+                    'first_seen': min(timestamps[ip]).isoformat() if timestamps[ip] else None,
+                    'last_seen': max(timestamps[ip]).isoformat() if timestamps[ip] else None
+                }
+            alerts[ip]['vertical_ports'] = alerts[ip]['vertical_ports'].union(ports)
+            if 'vertical' not in alerts[ip]['type']:
+                alerts[ip]['type'].append('vertical')
 
-    return alerts
+    # Final formatting
+    final_alerts = []
+    for alert in alerts.values():
+        alert['vertical_ports'] = list(alert['vertical_ports'])
+        alert['horizontal_ports'] = list(alert['horizontal_ports'])
+        final_alerts.append(alert)
 
+    return final_alerts
 
 
 if __name__ == "__main__":
-    parsed_pcap = parser("/home/mo/Downloads/second_capture.pcapng")
-    alerts = detect_brute_force_with_timing(parsed_pcap, threshold=10, time_window=60)
-    with open ("result.json", 'w') as f:
+    parsed_pcap = parser("/home/mo/Downloads/port_scan2.pcapng")
+    print(f"Parsed {len(parsed_pcap)} packets")
+
+    alerts = detect_port_scanning(parsed_pcap, threshold=5, window_minutes=6)
+    print(alerts)
+""" with open ("result.json", 'w') as f:
         json.dump(alerts, f, indent=4)
-    print("Alerts saved to result.json")
+    print("Alerts saved to result.json")"""
 
 """   if alerts:
         print("Brute force attack alerts:")

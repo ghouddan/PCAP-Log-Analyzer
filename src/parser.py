@@ -1,12 +1,13 @@
 from pyshark import FileCapture
 from datetime import datetime
 import json
+from pprint import pprint
 
 def parser(file_path):
     """
     Enhanced parser that preserves layer information and timestamps correctly.
     """
-    capture = FileCapture(file_path, display_filter='ssh')
+    capture = FileCapture(file_path)
     pcap_parsed = []
     
     for packet in capture:
@@ -40,9 +41,9 @@ def parser(file_path):
 
 
 if __name__ == "__main__" :
-    parsed_pcap = parser("/home/mo/Downloads/second_capture.pcapng")
+    parsed_pcap = parser("/home/mo/Downloads/port_scan2.pcapng")
     #print(parsed_pcap)  # Display first 5 packets for verification
-    print(parsed_pcap)
+    pprint(parsed_pcap)
     """with open("result.json", 'w') as f :
     json.dump(parsed_pcap, f, indent=4)
     #print("PCAP file parsed and saved to result.json")"""
