@@ -1,4 +1,4 @@
-from parser import parser
+from parser import parser_pcap
 from collections import defaultdict, deque
 from datetime import datetime, timedelta
 from typing import List, Dict, Any
@@ -324,7 +324,7 @@ def detect_data_exfiltration(packets: List[Dict[str, Any]], threshold: int = 100
 
 
 if __name__ == "__main__":
-    test_packets = [
+  """  test_packets = [
     {"src_ip": "192.168.1.10", "dst_ip": "8.8.8.8", "size": 500000},
     {"src_ip": "192.168.1.10", "dst_ip": "8.8.8.8", "size": 600000},  # total = 1.1MB
     {"src_ip": "192.168.1.15", "dst_ip": "8.8.4.4", "size": 10000},
@@ -333,7 +333,7 @@ if __name__ == "__main__":
     # Print results
     for alert in alerts:
         print(alert)
-
+"""
    
 """ parsed_pcap = parser("/home/mo/Downloads/port_scan3.pcapng")
     print(f"Parsed {len(parsed_pcap)} packets")

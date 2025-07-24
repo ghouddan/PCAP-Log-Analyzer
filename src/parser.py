@@ -3,7 +3,7 @@ from datetime import datetime
 import json
 from pprint import pprint
 
-def parser(file_path):
+def parser_pcap(file_path):
     """
     Enhanced parser that preserves layer information and timestamps correctly.
     """
@@ -40,10 +40,11 @@ def parser(file_path):
 
 
 
-if __name__ == "__main__" :
-    parsed_pcap = parser("/home/mo/Downloads/port_scan2.pcapng")
-    #print(parsed_pcap)  # Display first 5 packets for verification
-    pprint(parsed_pcap)
-    """with open("result.json", 'w') as f :
+"""if __name__ == "__main__" :
+    parsed_pcap = parser_pcap("/home/mo/Downloads/port_scan2.pcapng")
+    pprint(parsed_pcap)"""
+        #print(parsed_pcap)  # Display first 5 packets for verification
+
+"""with open("result.json", 'w') as f :
     json.dump(parsed_pcap, f, indent=4)
     #print("PCAP file parsed and saved to result.json")"""
