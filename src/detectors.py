@@ -272,40 +272,50 @@ def detect_port_scanning(packets: List[Dict[str, Any]], threshold: int = 10, win
     return final_alerts
 
 
-def detect_data_exfilteration(packets: List[Dict[str, Any]], threshold: int = 1000000) -> List[Dict[str, Any]]:
+def detect_data_exfiltration(packets: List[Dict[str, Any]], threshold: int = 1000000) -> List[Dict[str, Any]]:
     """
-    Detect potential data exfiltration based on packet sizes.
+    Detect potential data exfiltration based on packet sizes from internal to external IPs.
     Args:
         packets: List of parsed packet dictionaries.
         threshold: Size threshold in bytes to trigger an alert.
     Returns:
         List of alerts for detected data exfiltration activities.
     """
+    if whitelisted_ips is None:
+        whitelisted_ips = set()
+
+    def is_internal(ip):
+        return ip.startswith("192.168.") or ip.startswith("10.") or ip.startswith("172.")
+
     exfiltration_alerts = defaultdict(lambda: {'size': 0, 'packets': []})
 
     for packet in packets:
-        try:
-            src_ip = packet.get('src_ip')
-            size = int(packet.get('size', 0))
+        src_ip = packet.get('src_ip')
+        dst_ip = packet.get('dst_ip')
+        size = int(packet.get('size', 0))
+        timestamp = packet.get('timestamp')  # Optional enhancement
 
-            if not src_ip or size <= 0:
-                continue
-
-            exfiltration_alerts[src_ip]['size'] += size
-            exfiltration_alerts[src_ip]['packets'].append(packet)
-
-        except (ValueError, TypeError, KeyError):
+        if not src_ip or not dst_ip or size <= 0:
             continue
 
+        if dst_ip in whitelisted_ips:
+            continue
+
+        if is_internal(src_ip) and not is_internal(dst_ip):
+            key = (src_ip, dst_ip)
+            exfiltration_alerts[key]['size'] += size
+            exfiltration_alerts[key]['packets'].append(packet)
+
     alerts = []
-    for ip, data in exfiltration_alerts.items():
+    for (src_ip, dst_ip), data in exfiltration_alerts.items():
         if data['size'] >= threshold:
             alerts.append({
-                'ip': ip,
+                'src_ip': src_ip,
+                'dst_ip': dst_ip,
                 'total_size': data['size'],
                 'packet_count': len(data['packets']),
-                'message': "Potential data exfiltration detected",
-                'severity': "HIGH" if data['size'] > 10000000 else "MEDIUM"
+                'message': f"Potential data exfiltration: {data['size'] / 1024 / 1024:.2f} MB sent from {src_ip} to {dst_ip}",
+                'severity': "HIGH" if data['size'] > 10_000_000 else "MEDIUM"
             })
 
     return alerts
@@ -314,11 +324,23 @@ def detect_data_exfilteration(packets: List[Dict[str, Any]], threshold: int = 10
 
 
 if __name__ == "__main__":
-    parsed_pcap = parser("/home/mo/Downloads/port_scan3.pcapng")
+    test_packets = [
+    {"src_ip": "192.168.1.10", "dst_ip": "8.8.8.8", "size": 500000},
+    {"src_ip": "192.168.1.10", "dst_ip": "8.8.8.8", "size": 600000},  # total = 1.1MB
+    {"src_ip": "192.168.1.15", "dst_ip": "8.8.4.4", "size": 10000},
+        ]
+    alerts = detect_data_exfiltration(test_packets, 100000)
+    # Print results
+    for alert in alerts:
+        print(alert)
+
+   
+""" parsed_pcap = parser("/home/mo/Downloads/port_scan3.pcapng")
     print(f"Parsed {len(parsed_pcap)} packets")
 
     alerts = detect_port_scanning(parsed_pcap,5,5)
-    print(alerts)
+    print(alerts)"""
+
 """ with open ("result.json", 'w') as f:
         json.dump(alerts, f, indent=4)
     print("Alerts saved to result.json")"""
