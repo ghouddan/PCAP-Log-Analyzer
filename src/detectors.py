@@ -203,7 +203,7 @@ def detect_port_scanning(packets: List[Dict[str, Any]], threshold: int = 10, win
             dest_ip = packet.get('dst_ip')
             dest_port = int(packet.get('dest_port', 0))
             ts_raw = packet.get('timestamp')
-            print(f"{src_ip} → {dest_ip}:{dest_port} @ {ts_raw}")
+            #print(f"{src_ip} → {dest_ip}:{dest_port} @ {ts_raw}")
 
 
             if not (src_ip and dest_ip and dest_port and ts_raw):
@@ -272,11 +272,52 @@ def detect_port_scanning(packets: List[Dict[str, Any]], threshold: int = 10, win
     return final_alerts
 
 
+def detect_data_exfilteration(packets: List[Dict[str, Any]], threshold: int = 1000000) -> List[Dict[str, Any]]:
+    """
+    Detect potential data exfiltration based on packet sizes.
+    Args:
+        packets: List of parsed packet dictionaries.
+        threshold: Size threshold in bytes to trigger an alert.
+    Returns:
+        List of alerts for detected data exfiltration activities.
+    """
+    exfiltration_alerts = defaultdict(lambda: {'size': 0, 'packets': []})
+
+    for packet in packets:
+        try:
+            src_ip = packet.get('src_ip')
+            size = int(packet.get('size', 0))
+
+            if not src_ip or size <= 0:
+                continue
+
+            exfiltration_alerts[src_ip]['size'] += size
+            exfiltration_alerts[src_ip]['packets'].append(packet)
+
+        except (ValueError, TypeError, KeyError):
+            continue
+
+    alerts = []
+    for ip, data in exfiltration_alerts.items():
+        if data['size'] >= threshold:
+            alerts.append({
+                'ip': ip,
+                'total_size': data['size'],
+                'packet_count': len(data['packets']),
+                'message': "Potential data exfiltration detected",
+                'severity': "HIGH" if data['size'] > 10000000 else "MEDIUM"
+            })
+
+    return alerts
+
+
+
+
 if __name__ == "__main__":
-    parsed_pcap = parser("/home/mo/Downloads/port_scan2.pcapng")
+    parsed_pcap = parser("/home/mo/Downloads/port_scan3.pcapng")
     print(f"Parsed {len(parsed_pcap)} packets")
 
-    alerts = detect_port_scanning(parsed_pcap, threshold=5, window_minutes=6)
+    alerts = detect_port_scanning(parsed_pcap,5,5)
     print(alerts)
 """ with open ("result.json", 'w') as f:
         json.dump(alerts, f, indent=4)
