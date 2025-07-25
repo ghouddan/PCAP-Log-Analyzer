@@ -44,7 +44,7 @@ python3 pcap_analyzer.py \
 | `--file`               | Path to the PCAP file                                            |
 | `--output`             | Path to write the detection report (JSON)                        |
 | `--brute-threshold`    | Number of attempts from same IP to trigger brute force detection |
-| `--window`             | ime window in seconds for brute-force detection                  |
+| `--window`             | window in seconds for brute-force detection                      |
 | `--scan-threshold`     | Number of ports to scan within a short window to trigger         |
 | `--scan-window`        | Time window in minutes for port scan detection                   |
 | `--file-threshold`     | Transfer size in MB to trigger data exfiltration alert           |
