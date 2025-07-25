@@ -132,9 +132,3 @@ Output is saved as a structured JSON report:
 This project was built to simulate the type of network traffic analysis done in real-world SOC environments. It helped me gain hands-on experience with packet inspection, detection logic, and building CLI tools for cybersecurity tasks.
 
 🛡️ Cybersecurity Enthusiast | 💻 Software Engineer
-
----
-
-```
-
-
