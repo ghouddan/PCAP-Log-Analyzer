@@ -44,10 +44,12 @@ python3 pcap_analyzer.py \
 | `--file`               | Path to the PCAP file                                            |
 | `--output`             | Path to write the detection report (JSON)                        |
 | `--brute-threshold`    | Number of attempts from same IP to trigger brute force detection |
-| `--transfer-threshold` | Byte count to trigger large transfer detection                   |
+| `--window`             | ime window in seconds for brute-force detection                  |
 | `--scan-threshold`     | Number of ports to scan within a short window to trigger         |
 | `--scan-window`        | Time window in minutes for port scan detection                   |
 | `--file-threshold`     | Transfer size in MB to trigger data exfiltration alert           |
+| `--whitelisted_ips`    | List of IPs to ignore for data exfiltration detection            |
+
 
 ---
 
@@ -83,17 +85,7 @@ Output is saved as a structured JSON report:
             "ip": "192.168.11.105",
             "horizontal_ports": [],
             "vertical_ports": [
-                20,
-                21,
-                22,
-                23,
-                24,
-                25,
-                26,
-                27,
-                28,
-                29,
-                30
+                20, 21, 22, 23, 24, 25, 26, 27, 28
             ],
             "message": "Potential port scanning detected",
             "severity": "MEDIUM",
@@ -106,12 +98,13 @@ Output is saved as a structured JSON report:
   ],
   "large_transfers": [
    {
-    'src_ip': '192.168.1.10',
-    'dst_ip': '8.8.8.8',
-    'total_size': 1100000,
-    'packet_count': 2,
-    'message': 'Potential data exfiltration: 1.05 MB sent from 192.168.1.10 to 8.8.8.8',
-    'severity': 'MEDIUM'}
+    "src_ip": "192.168.1.10",
+    "dst_ip": "8.8.8.8",
+    "total_size": 1100000,
+    "packet_count": 2,
+    "message": "Potential data exfiltration: 1.05 MB sent from 192.168.1.10 to 8.8.8.8",
+    "severity": "MEDIUM"
+    }
   ]
 }
 ```
