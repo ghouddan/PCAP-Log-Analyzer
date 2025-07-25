@@ -23,12 +23,11 @@ def main():
     parser.add_argument("--window", "-w", type=int, default=5, required=False, help="Time window in seconds for brute-force detection (default: 5)")
 
     parser.add_argument("--scan-threshold", type=int, default=10,required=False, help="Ports accessed per IP before scan is flagged (default: 10)")
-    parser.add_argument("--file-threshold", type=int,required=False, help="Transfer size in MB to trigger data exfiltration alert")
     parser.add_argument("--scan-window", type=int, default=10, required=False, help="Time window in seconds for port scan detection (default: 10)")
 
-    parser.add_argument("--no-brute", action="store_true",required=False, help="Disable brute-force detection")
-    parser.add_argument("--no-scan", action="store_true",required=False, help="Disable port scan detection")
-    parser.add_argument("--no-exfiltration", action="store_true",required=False,  help="Disable data exfiltration detection")
+    parser.add_argument("--file-threshold", type=int,required=False, help="Transfer size in MB to trigger data exfiltration alert")
+    parser.add_argument("--whitelisted_ips", type=str, nargs='*', default=[], help="List of IPs to ignore for data exfiltration detection")
+
 
     args = parser.parse_args()
 

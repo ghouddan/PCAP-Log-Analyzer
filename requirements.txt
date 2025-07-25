@@ -1,5 +1,6 @@
 appdirs==1.4.4
 collection==0.1.6
+colorama==0.4.6
 DateTime==5.5
 lxml==6.0.0
 packaging==25.0

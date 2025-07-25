@@ -39,9 +39,9 @@ def parser_pcap(file_path):
 
 
 
-
-"""if __name__ == "__main__" :
-    parsed_pcap = parser_pcap("/home/mo/Downloads/port_scan2.pcapng")
+"""
+if __name__ == "__main__" :
+    parsed_pcap = parser_pcap("/home/mo/Desktop/PCAP-log-analyzer/samples/SSH_brute_force.pcapng")
     pprint(parsed_pcap)"""
         #print(parsed_pcap)  # Display first 5 packets for verification
 

@@ -109,7 +109,7 @@ def detect_brute_force_with_timing(
                 'target_ports': list({a['dest_port'] for a in attempts}),
                 'message': "Potential brute force attack detected",
                 'severity': calculate_severity(len(attempts), total_duration, time_diffs),
-                'windows_details': suspicious_windows
+                #'windows_details': suspicious_windows
             }
             alerts.append(alert)
 
@@ -272,7 +272,7 @@ def detect_port_scanning(packets: List[Dict[str, Any]], threshold: int = 10, win
     return final_alerts
 
 
-def detect_data_exfiltration(packets: List[Dict[str, Any]], threshold: int = 1000000) -> List[Dict[str, Any]]:
+def detect_data_exfiltration(packets: List[Dict[str, Any]], threshold: int = 1000000, whitelisted_ips=None) -> List[Dict[str, Any]]:
     """
     Detect potential data exfiltration based on packet sizes from internal to external IPs.
     Args:
@@ -324,7 +324,7 @@ def detect_data_exfiltration(packets: List[Dict[str, Any]], threshold: int = 100
 
 
 if __name__ == "__main__":
-  """  test_packets = [
+    test_packets = [
     {"src_ip": "192.168.1.10", "dst_ip": "8.8.8.8", "size": 500000},
     {"src_ip": "192.168.1.10", "dst_ip": "8.8.8.8", "size": 600000},  # total = 1.1MB
     {"src_ip": "192.168.1.15", "dst_ip": "8.8.4.4", "size": 10000},
@@ -333,7 +333,7 @@ if __name__ == "__main__":
     # Print results
     for alert in alerts:
         print(alert)
-"""
+
    
 """ parsed_pcap = parser("/home/mo/Downloads/port_scan3.pcapng")
     print(f"Parsed {len(parsed_pcap)} packets")
